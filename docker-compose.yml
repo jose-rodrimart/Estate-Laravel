@@ -1,0 +1,95 @@
+version: '3'
+
+networks:
+  development:
+
+services:
+  site:
+    build:
+      context: .
+      dockerfile: nginx.dockerfile
+    container_name: ${APP_NAME}-nginx
+    ports:
+      - ${NGINX_PORT}:80
+    volumes:
+      - ./src:/var/www/html:delegated
+    depends_on:
+      - php
+      - redis
+      - database
+      - mailhog
+    networks:
+      - development
+
+  database:
+    image: postgres:13.1-alpine
+    container_name: ${APP_NAME}-database
+    restart: unless-stopped
+    volumes:
+         - "./db:/var/lib/postgresql/data"
+    tty: true
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB="${DB_DATABASE}"
+    networks:
+      - development
+
+  php:
+    build:
+      context: .
+      dockerfile: php.dockerfile
+    container_name: ${APP_NAME}-php
+    volumes:
+      - ./src:/var/www/html:delegated
+    networks:
+      - development
+
+  redis:
+    image: redis:alpine
+    container_name: ${APP_NAME}-redis
+    restart: unless-stopped
+    ports:
+      - ${REDIS_PORT}:6379
+    networks:
+      - development
+
+  composer:
+    build:
+      context: .
+      dockerfile: composer.dockerfile
+    container_name: ${APP_NAME}-composer
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    depends_on:
+      - php
+    user: laravel
+    entrypoint: ['composer', '--ignore-platform-reqs']
+    networks:
+      - development
+
+  artisan:
+    build:
+      context: .
+      dockerfile: php.dockerfile
+    container_name: ${APP_NAME}-artisan
+    volumes:
+      - ./src:/var/www/html:delegated
+    depends_on:
+      - database
+    working_dir: /var/www/html
+    user: laravel
+    entrypoint: ['php', '/var/www/html/artisan']
+    networks:
+      - development
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: ${APP_NAME}-mailhog
+    ports:
+      - ${MAIL_PORT}:1025
+    networks:
+      - development
