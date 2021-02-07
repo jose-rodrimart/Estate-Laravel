@@ -6,7 +6,7 @@ RUN addgroup -g 1000 laravel && adduser -G laravel -g laravel -s /bin/sh -D lara
 
 RUN mkdir -p /var/www/html
 
-RUN chown laravel:laravel /var/www/html
+RUN chown laravel:laravel /var/www/html && chmod -R 711 /var/www/html
 # Install selected extensions and other stuff
 RUN apk update \
 	&& apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
@@ -17,6 +17,6 @@ RUN apk update \
 
 WORKDIR /var/www/html
 
-RUN docker-php-ext-install pdo pdo_pgsql opcache
+RUN docker-php-ext-install pdo pdo_pgsql
 
 RUN docker-php-ext-enable redis
