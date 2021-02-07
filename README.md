@@ -1,6 +1,9 @@
-FORKED FROM [aschmelyun/docker-compose-laravel](https://github.com/aschmelyun/docker-compose-laravel)
+# How to setup Laravel (PHP 8, Postgres, Nginx, Redis and etc) with Docker & WSL2
 
-# how to use
+# For detailed Instruction - i created an article
+[How to setup Laravel (PHP 8, Postgres, Nginx, Redis and etc) with Docker & WSL2](https://ndarproj.medium.com/how-to-setup-laravel-php-8-postgres-nginx-redis-and-etc-with-docker-wsl2-54d8615a4a45)
+
+# How to use ( Simple )
 - `1. git clone https://github.com/ndarproj/docker-laravel-php-postgres`
 - `2. add your existing .env or you may the use default .env from laravel`
 - --- *docker **db/redis/mail/nginx ports**, **app name** and **db username/password** will depend on your ./src/.env file`**
