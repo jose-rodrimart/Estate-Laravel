@@ -53,37 +53,7 @@ services:
       - ${REDIS_PORT}:6379
     networks:
       - development
-
-  composer:
-    build:
-      context: .
-      dockerfile: composer.dockerfile
-    container_name: ${APP_NAME}-composer
-    volumes:
-      - ./src:/var/www/html
-    working_dir: /var/www/html
-    depends_on:
-      - php
-    user: laravel
-    entrypoint: ['composer', '--ignore-platform-reqs']
-    networks:
-      - development
-
-  artisan:
-    build:
-      context: .
-      dockerfile: php.dockerfile
-    container_name: ${APP_NAME}-artisan
-    volumes:
-      - ./src:/var/www/html:delegated
-    depends_on:
-      - database
-    working_dir: /var/www/html
-    user: laravel
-    entrypoint: ['php', '/var/www/html/artisan']
-    networks:
-      - development
-
+      
   mailhog:
     image: mailhog/mailhog:latest
     container_name: ${APP_NAME}-mailhog
