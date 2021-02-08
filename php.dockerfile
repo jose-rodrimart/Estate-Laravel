@@ -6,14 +6,18 @@ RUN addgroup -g 1000 laravel && adduser -G laravel -g laravel -s /bin/sh -D lara
 
 RUN mkdir -p /var/www/html
 
-RUN chown laravel:laravel /var/www/html && chmod -R 711 /var/www/html
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+
+RUN chown laravel:laravel /var/www/html
 # Install selected extensions and other stuff
 RUN apk update \
 	&& apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
 	&& pecl install redis \
-	&& apk del -f .build-deps \
 	&& apk --no-cache add \
-    postgresql-dev 
+	postgresql-dev \
+	&& apk del -f .build-deps
+
 
 WORKDIR /var/www/html
 
