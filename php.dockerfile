@@ -6,9 +6,6 @@ RUN addgroup -g 1000 laravel && adduser -G laravel -g laravel -s /bin/sh -D lara
 
 RUN mkdir -p /var/www/html
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-
 RUN chown laravel:laravel /var/www/html
 # Install selected extensions and other stuff
 RUN apk update \
